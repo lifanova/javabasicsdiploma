@@ -31,7 +31,10 @@ public class TextGraphicsConverterImpl implements TextGraphicsConverter {
         // Делаем проверку на max допустимое соотношение сторон картинки
         int width = img.getWidth();
         int height = img.getHeight();
+        //System.out.println("width = " + width + ", height = " + height);
+
         double ratio = width / height;
+        //System.out.println("ratio = " + ratio + ", maxRatio = " + maxRatio);
         if (ratio > maxRatio) {
             throw new BadImageSizeException(ratio, maxRatio);
         }
@@ -69,19 +72,20 @@ public class TextGraphicsConverterImpl implements TextGraphicsConverter {
             schema = new TextColorSchemaImpl();
         }
 
-        char[][] result = new char[newWidth][newHeight];
-        for (int w = 0; w < newWidth; w++) {
-            for (int h = 0; h < newHeight; h++) {
+        StringBuilder builder = new StringBuilder();
+        for (int h = 0; h < newHeight; h++) {
+            for (int w = 0; w < newWidth; w++) {
                 int color = bwRaster.getPixel(w, h, new int[3])[0];
                 char c = schema.convert(color);
                 //запоминаем символ c, например, в двумерном массиве или как-то ещё на ваше усмотрение
-                result[w][h] = c;
-                System.out.println(c);
+                builder.append(c);
             }
+
+            builder.append("\n");
         }
 
         // Возвращаем собранный текст
-        return result.toString();
+        return builder.toString();
     }
 
     @Override
